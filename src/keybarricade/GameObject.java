@@ -14,6 +14,12 @@ public abstract class GameObject {
         this.x = x;
         this.y = y;
     }
+    
+    public GameObject(int x, int y, ID id) {
+        this.x = x;
+        this.y = y;
+        this.id = id;
+    }
 
     public void setX(int x) {
         this.x = x;

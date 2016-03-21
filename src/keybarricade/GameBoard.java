@@ -14,32 +14,26 @@ import javax.swing.JPanel;
 
 public class GameBoard extends JPanel {
 
-    private final int UP_DIRECTION = 1;
-    private final int DOWN_DIRECTION = 2;
-    private final int LEFT_DIRECTION = 3;
-    private final int RIGHT_DIRECTION = 4;
-
     private final int WINDOW_OFFSET = 20;
     private final int OBJECT_SPACE = 35;
+
     private int w;
     private int h;
-    private int lastKeyPressed;
+    private int lastKeyPressed; // to determine which barricade should be opened if surrounded by barricades
     private int levelNumber;
     private boolean completed;
     private boolean hasKey;
     private ArrayList<GameObject> objects;
-    private Window window;
     private Player player;
     private Key key;
+    private Key keyInBag; // when key is picked up this var will be instantiated
 
     public GameBoard(int levelNumber) {
-        objects = new ArrayList<GameObject>();
-        window = new Window("Key Barricade");
+        objects = new ArrayList<>();
         this.levelNumber = levelNumber;
         w = 0;
         h = 0;
         lastKeyPressed = 0;
-        completed = false;
         hasKey = false;
         addKeyListener(new KeyInput());
         setFocusable(true);
@@ -76,7 +70,9 @@ public class GameBoard extends JPanel {
         String level = "";
 
         if (completed) {
+            objects.removeAll(objects);
             setLevelNumber(getLevelNumber() + 1);
+            keyInBag = null;
             completed = false;
         }
         try {
@@ -144,9 +140,7 @@ public class GameBoard extends JPanel {
         g.fillRect(0, 0, getWidth(), getHeight());
         g.setColor(Color.BLACK);
 
-        for (int i = 0; i < objects.size(); i++) {
-            GameObject object = objects.get(i);
-
+        for (GameObject object : objects) {
             for (int k = WINDOW_OFFSET; k < this.getWidth() - 14; k += OBJECT_SPACE) {
                 for (int j = WINDOW_OFFSET; j < this.getHeight() - 25; j += OBJECT_SPACE) {
                     g.setColor(Color.BLACK);
@@ -190,14 +184,12 @@ public class GameBoard extends JPanel {
                     }
                 }
             }
-
         }
 
         g.setFont(new Font(null, Font.PLAIN, 12));
         g.drawString("Key: " + hasKey, getWidth() / 2 - 15, 15);
 
         if (completed) {
-            objects.removeAll(objects);
             initWorld();
         }
     }
@@ -213,13 +205,12 @@ public class GameBoard extends JPanel {
 
         public void keyPressed(KeyEvent e) {
             int input = e.getKeyCode();
-            int pressECounter = 0;
 
             switch (input) {
                 case KeyEvent.VK_UP:
                     if (!completed) {
                         lastKeyPressed = KeyEvent.VK_UP;
-                        if (checkCollision(player, UP_DIRECTION)
+                        if (checkPlayerCollision(player, lastKeyPressed)
                                 || player.getY() <= OBJECT_SPACE) {
                             return;
                         }
@@ -230,7 +221,7 @@ public class GameBoard extends JPanel {
                 case KeyEvent.VK_DOWN:
                     if (!completed) {
                         lastKeyPressed = KeyEvent.VK_DOWN;
-                        if (checkCollision(player, DOWN_DIRECTION)
+                        if (checkPlayerCollision(player, lastKeyPressed)
                                 || player.getY() >= getLevelHeight() - OBJECT_SPACE) {
                             return;
                         }
@@ -241,7 +232,7 @@ public class GameBoard extends JPanel {
                 case KeyEvent.VK_LEFT:
                     if (!completed) {
                         lastKeyPressed = KeyEvent.VK_LEFT;
-                        if (checkCollision(player, LEFT_DIRECTION)
+                        if (checkPlayerCollision(player, lastKeyPressed)
                                 || player.getX() <= OBJECT_SPACE) {
                             return;
                         }
@@ -252,7 +243,7 @@ public class GameBoard extends JPanel {
                 case KeyEvent.VK_RIGHT:
                     if (!completed) {
                         lastKeyPressed = KeyEvent.VK_RIGHT;
-                        if (checkCollision(player, RIGHT_DIRECTION)
+                        if (checkPlayerCollision(player, lastKeyPressed)
                                 || player.getX() >= getLevelWidth() - OBJECT_SPACE) {
                             return;
                         }
@@ -266,18 +257,15 @@ public class GameBoard extends JPanel {
                             for (int i = 0; i < objects.size(); i++) {
                                 GameObject item = objects.get(i);
                                 if (item instanceof Key) {
-                                    GameObject key = item;
-                                    if (player.standsOnObject(key)) {
+                                    if (player.standsOnObject(item)) {
+                                        keyInBag = new Key(player.getX(), player.getY(), item.getId());
+                                        objects.remove(item);
                                         hasKey = true;
-                                        objects.remove(key);
-                                        pressECounter = 1;
                                     }
                                 }
                             }
                         } else {
-                            if (pressECounter == 0) {
-                                useKey();
-                            }
+                            useKey();
                         }
                     }
                     break;
@@ -299,24 +287,20 @@ public class GameBoard extends JPanel {
                     break;
             }
             System.out.println("X: " + player.getX() + " Y: " + player.getY());
-            pressECounter = 0;
             repaint();
-
         }
     }
 
-    private boolean checkCollision(Player player, int direction) {
-        for (int i = 0; i < objects.size(); i++) {
-            GameObject object = objects.get(i);
-
-            if (object instanceof Wall || object instanceof Barricade) {
-                if (player.topCollision(object) && direction == UP_DIRECTION) {
+    private boolean checkPlayerCollision(Player player, int direction) {
+        for (GameObject item : objects) {
+            if (item instanceof Wall || item instanceof Barricade) {
+                if (player.topCollision(item) && direction == KeyEvent.VK_UP) {
                     return true;
-                } else if (player.bottomCollision(object) && direction == DOWN_DIRECTION) {
+                } else if (player.bottomCollision(item) && direction == KeyEvent.VK_DOWN) {
                     return true;
-                } else if (player.leftCollision(object) && direction == LEFT_DIRECTION) {
+                } else if (player.leftCollision(item) && direction == KeyEvent.VK_LEFT) {
                     return true;
-                } else if (player.rightCollision(object) && direction == RIGHT_DIRECTION) {
+                } else if (player.rightCollision(item) && direction == KeyEvent.VK_RIGHT) {
                     return true;
                 }
             }
@@ -329,20 +313,27 @@ public class GameBoard extends JPanel {
             for (int i = 0; i < objects.size(); i++) {
                 GameObject object = objects.get(i);
                 if (object instanceof Barricade) {
+
+                    boolean keyFits = keyInBag.getId().equals(object.getId());
+
                     if (player.topCollision(object)
-                            && lastKeyPressed == KeyEvent.VK_UP) {
+                            && lastKeyPressed == KeyEvent.VK_UP
+                            && keyFits) {
                         objects.remove(object);
                         hasKey = false;
                     } else if (player.bottomCollision(object)
-                            && lastKeyPressed == KeyEvent.VK_DOWN) {
+                            && lastKeyPressed == KeyEvent.VK_DOWN
+                            && keyFits) {
                         objects.remove(object);
                         hasKey = false;
                     } else if (player.leftCollision(object)
-                            && lastKeyPressed == KeyEvent.VK_LEFT) {
+                            && lastKeyPressed == KeyEvent.VK_LEFT
+                            && keyFits) {
                         objects.remove(object);
                         hasKey = false;
                     } else if (player.rightCollision(object)
-                            && lastKeyPressed == KeyEvent.VK_RIGHT) {
+                            && lastKeyPressed == KeyEvent.VK_RIGHT
+                            && keyFits) {
                         objects.remove(object);
                         hasKey = false;
                     }

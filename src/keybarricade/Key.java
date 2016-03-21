@@ -6,19 +6,12 @@ import javax.swing.ImageIcon;
 
 public class Key extends GameObject {
 
-    private ID id;
-    
     public Key(int x, int y, ID id) {
-        super(x, y);
-        this.id = id;
-        
+        super(x, y, id);
+    
         URL loc = this.getClass().getResource("key.png");
         ImageIcon iia = new ImageIcon(loc);
         Image image = iia.getImage();
         setImage(image);
-    }
-
-    public ID getId() {
-        return id;
     }
 }
