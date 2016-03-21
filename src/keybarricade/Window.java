@@ -28,7 +28,8 @@ public class Window extends JFrame {
         createGameWindow(this, title);
         startComponentsInit(); //initialize components "start" button included
         setFocusable(true);
-
+        setResizable(false);
+        
         start.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (levelbox.getSelectedItem().equals("Level 1")) {
