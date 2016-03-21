@@ -34,6 +34,7 @@ public class GameBoard extends JPanel {
 
     public GameBoard(int levelNumber) {
         objects = new ArrayList<GameObject>();
+        window = new Window("Key Barricade");
         this.levelNumber = levelNumber;
         w = 0;
         h = 0;
@@ -42,7 +43,12 @@ public class GameBoard extends JPanel {
         hasKey = false;
         addKeyListener(new KeyInput());
         setFocusable(true);
-        initWorld();
+        if (!completed) {
+            initWorld();
+        } else {
+            setLevelNumber(getLevelNumber() + 1);
+            initWorld();
+        }
     }
 
     public int getLevelWidth() {
@@ -61,12 +67,20 @@ public class GameBoard extends JPanel {
         return levelNumber;
     }
 
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
+    public boolean isLevelCompleted() {
+        return completed;
+    }
+
     private void initWorld() {
         int x = WINDOW_OFFSET;
         int y = WINDOW_OFFSET;
         String level = "";
         try {
-            Scanner readLevel = new Scanner(new File("src/keybarricade/level" + levelNumber + ".txt").getAbsoluteFile());
+            Scanner readLevel = new Scanner(new File("src/keybarricade/level" + getLevelNumber() + ".txt").getAbsoluteFile());
             while (readLevel.hasNext()) {
                 level += readLevel.next();
             }
@@ -91,24 +105,24 @@ public class GameBoard extends JPanel {
                 } else if (object == 'w') {
                     objects.add(new Wall(x, y));
                     x += OBJECT_SPACE;
-                } else if (object == 'b' && nextObject == '1') {
+                } else if (object == 'u') { // barricade object number 100
                     objects.add(new Barricade(x, y, ID.Object100));
                     x += OBJECT_SPACE;
-                } else if (object == 'b' && nextObject == '2') {
+                } else if (object == 'i') { // barricade object number 200
                     objects.add(new Barricade(x, y, ID.Object200));
                     x += OBJECT_SPACE;
-                } else if (object == 'b' && nextObject == '3') {
+                } else if (object == 'o') { // barricade object number 300
                     objects.add(new Barricade(x, y, ID.Object300));
                     x += OBJECT_SPACE;
-                } else if (object == 'k' && nextObject == '1') {
+                } else if (object == '1') { // key object number 100
                     key = new Key(x, y, ID.Object100);
                     objects.add(key);
                     x += OBJECT_SPACE;
-                } else if (object == 'k' && nextObject == '2') {
+                } else if (object == '2') { // key object number 200
                     key = new Key(x, y, ID.Object200);
                     objects.add(key);
                     x += OBJECT_SPACE;
-                } else if (object == 'k' && nextObject == '3') {
+                } else if (object == '3') { // key object number 300
                     key = new Key(x, y, ID.Object300);
                     objects.add(key);
                     x += OBJECT_SPACE;
@@ -125,13 +139,15 @@ public class GameBoard extends JPanel {
             h = y;
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(this, e, "Error", JOptionPane.ERROR_MESSAGE);
-        }
+            System.exit(0);
+        } 
     }
 
     private void buildLevel(Graphics g) {
         g.setColor(Color.LIGHT_GRAY);
         g.fillRect(0, 0, getWidth(), getHeight());
         g.setColor(Color.BLACK);
+
         for (int i = 0; i < objects.size(); i++) {
             GameObject object = objects.get(i);
 
@@ -152,7 +168,7 @@ public class GameBoard extends JPanel {
             if (object instanceof Finish) {
                 GameObject finish = object;
                 if (player.standsOnObject(finish)) {
-                    window.setupLevel(getLevelNumber() + 1);
+                    completed = true;
                 }
             }
             if (object instanceof Key) {
@@ -186,6 +202,10 @@ public class GameBoard extends JPanel {
 
         if (completed) {
             g.drawString("Completed!", 15, 15);
+            setLevelNumber(getLevelNumber() + 1);
+            initWorld();
+            completed = false;
+            repaint();
         }
     }
 

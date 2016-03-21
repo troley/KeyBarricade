@@ -30,16 +30,16 @@ public class Window extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (levelbox.getSelectedItem().equals("Level 1")) {
                     setupLevel(1);
-                    
+
                 } else if (levelbox.getSelectedItem().equals("Level 2")) {
                     setupLevel(2);
-                    
+
                 } else if (levelbox.getSelectedItem().equals("Level 3")) {
                     setupLevel(3);
                 }
             }
         });
-
+        
         setVisible(true);
     }
 
@@ -50,7 +50,7 @@ public class Window extends JFrame {
         frame.setLocationRelativeTo(null);
     }
 
-    public void createGameWindow(JFrame frame, GameBoard board) {
+    private void createGameWindow(JFrame frame, GameBoard board) {
         frame.remove(mainpanel);
         frame.setSize(board.getLevelWidth() + OFFSET, board.getLevelHeight() + 2 * OFFSET);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
