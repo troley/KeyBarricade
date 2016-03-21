@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -26,6 +28,7 @@ public class Window extends JFrame {
         createGameWindow(this, title);
         startComponentsInit(); //initialize components "start" button included
         setFocusable(true);
+
         start.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (levelbox.getSelectedItem().equals("Level 1")) {
@@ -39,7 +42,22 @@ public class Window extends JFrame {
                 }
             }
         });
-        
+
+        this.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    if (levelbox.getSelectedItem().equals("Level 1")) {
+                        setupLevel(1);
+
+                    } else if (levelbox.getSelectedItem().equals("Level 2")) {
+                        setupLevel(2);
+
+                    } else if (levelbox.getSelectedItem().equals("Level 3")) {
+                        setupLevel(3);
+                    }
+                }
+            }
+        });
         setVisible(true);
     }
 
@@ -78,7 +96,7 @@ public class Window extends JFrame {
         add(mainpanel);
     }
 
-    public void setupLevel(int levelNumber) {
+    private void setupLevel(int levelNumber) {
         board = new GameBoard(levelNumber);
         createGameWindow(Window.this, board);
         board.requestFocus();

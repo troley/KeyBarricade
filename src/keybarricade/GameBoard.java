@@ -43,12 +43,7 @@ public class GameBoard extends JPanel {
         hasKey = false;
         addKeyListener(new KeyInput());
         setFocusable(true);
-        if (!completed) {
-            initWorld();
-        } else {
-            setLevelNumber(getLevelNumber() + 1);
-            initWorld();
-        }
+        initWorld();
     }
 
     public int getLevelWidth() {
@@ -79,6 +74,11 @@ public class GameBoard extends JPanel {
         int x = WINDOW_OFFSET;
         int y = WINDOW_OFFSET;
         String level = "";
+
+        if (completed) {
+            setLevelNumber(getLevelNumber() + 1);
+            completed = false;
+        }
         try {
             Scanner readLevel = new Scanner(new File("src/keybarricade/level" + getLevelNumber() + ".txt").getAbsoluteFile());
             while (readLevel.hasNext()) {
@@ -86,10 +86,6 @@ public class GameBoard extends JPanel {
             }
             for (int i = 0; i < level.length(); i++) {
                 char object = level.charAt(i);
-                char nextObject = '`';
-                if (i < level.length() - 1) {
-                    nextObject = level.charAt(i + 1);
-                }
 
                 if (object == 'n') {
                     y += OBJECT_SPACE;
@@ -140,7 +136,7 @@ public class GameBoard extends JPanel {
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(this, e, "Error", JOptionPane.ERROR_MESSAGE);
             System.exit(0);
-        } 
+        }
     }
 
     private void buildLevel(Graphics g) {
@@ -154,7 +150,7 @@ public class GameBoard extends JPanel {
             for (int k = WINDOW_OFFSET; k < this.getWidth() - 14; k += OBJECT_SPACE) {
                 for (int j = WINDOW_OFFSET; j < this.getHeight() - 25; j += OBJECT_SPACE) {
                     g.setColor(Color.BLACK);
-                    g.drawRect(k, j, 35, 35);
+                    g.drawRect(k, j, OBJECT_SPACE, OBJECT_SPACE);
                 }
             }
 
@@ -201,11 +197,8 @@ public class GameBoard extends JPanel {
         g.drawString("Key: " + hasKey, getWidth() / 2 - 15, 15);
 
         if (completed) {
-            g.drawString("Completed!", 15, 15);
-            setLevelNumber(getLevelNumber() + 1);
+            objects.removeAll(objects);
             initWorld();
-            completed = false;
-            repaint();
         }
     }
 
@@ -213,6 +206,7 @@ public class GameBoard extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
         buildLevel(g);
+        repaint();
     }
 
     class KeyInput extends KeyAdapter {
