@@ -14,23 +14,23 @@ import javax.swing.JPanel;
 
 public class GameBoard extends JPanel {
 
-    public final int UP_DIRECTION = 1;
-    public final int DOWN_DIRECTION = 2;
-    public final int LEFT_DIRECTION = 3;
-    public final int RIGHT_DIRECTION = 4;
+    private final int UP_DIRECTION = 1;
+    private final int DOWN_DIRECTION = 2;
+    private final int LEFT_DIRECTION = 3;
+    private final int RIGHT_DIRECTION = 4;
 
     private final int WINDOW_OFFSET = 20;
     private final int OBJECT_SPACE = 35;
     private int w;
     private int h;
     private int lastKeyPressed;
-    private ArrayList<GameObject> objects;
+    private int levelNumber;
     private boolean completed;
     private boolean hasKey;
+    private ArrayList<GameObject> objects;
     private Window window;
     private Player player;
     private Key key;
-    private int levelNumber;
 
     public GameBoard(int levelNumber) {
         objects = new ArrayList<GameObject>();
