@@ -42,7 +42,9 @@ public class Player extends GameObject {
      * Iterates through the given arraylist and looks for a Barricade object.
      * Then it gets the current facing direction (Up, down, left, right) and
      * tries to open the barricade (if it meets the assignment conditions).
-     * @param objects the arraylist of game objects where a Key object can be found.
+     *
+     * @param objects the arraylist of game objects where a Key object can be
+     * found.
      * @param currentFacingDirection the current facing direction of the player.
      */
     public void useKey(ArrayList<GameObject> objects, int currentFacingDirection) {

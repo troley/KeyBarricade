@@ -1,7 +1,6 @@
 package keybarricade;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyAdapter;
@@ -143,10 +142,10 @@ public class GameBoard extends JPanel {
 
         if (getLevelWidth() > window.getWidth()) {
             if (getLevelHeight() > window.getHeight()) {
-                window.setSize(getLevelWidth() + (WINDOW_OFFSET + 15), getLevelHeight() + (2 * WINDOW_OFFSET) + 14);
+                window.setSize(getLevelWidth() + (WINDOW_OFFSET + 5), getLevelHeight() + (2 * WINDOW_OFFSET) + 4);
             }
         }
-        window.setSize(getLevelWidth() + (WINDOW_OFFSET + 15), getLevelHeight() + (2 * WINDOW_OFFSET) + 14);
+        window.setSize(getLevelWidth() + (WINDOW_OFFSET + 5), getLevelHeight() + (2 * WINDOW_OFFSET) + 4);
     }
 
     private void buildLevel(Graphics g) {

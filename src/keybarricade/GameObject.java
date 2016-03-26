@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
@@ -104,16 +103,16 @@ public abstract class GameObject {
         return false;
     }
     
-
+    // draws the strings of object IDs on barricades and keys
     public void drawObjectString(GameObject object, String stringNumber, Graphics g) {
         if (object instanceof Key) {
-            g.setColor(Color.RED);
+            g.setColor(Color.BLACK);
             g.setFont(new Font(null, Font.PLAIN, 10));
-            g.drawString(stringNumber, object.getX() + 4, object.getY() + 11);
+            g.drawString(stringNumber, object.getX() + 6, object.getY() + 9);
         } else if (object instanceof Barricade) {
             g.setColor(Color.WHITE);
             g.setFont(new Font(null, Font.PLAIN, 10));
-            g.drawString(stringNumber, object.getX() + 4, object.getY() + 11);
+            g.drawString(stringNumber, object.getX() + 6, object.getY() + 11);
         }
     }
 }

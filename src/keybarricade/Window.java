@@ -1,11 +1,11 @@
 package keybarricade;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -19,25 +19,30 @@ public class Window extends JFrame {
     private JPanel mainpanel;
     private JPanel fieldpanel;
     private JPanel buttonpanel;
+    private JCheckBox topCheck;
 
     public Window(String title, GameBoard board) {
         createGameWindow(title);
         startComponentsInit(); //initialize components "start" button included
         setFocusable(true);
+        setResizable(false);
 
         start.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (levelbox.getSelectedItem().equals("Level 1")) {
-                    board.setLevelNumber(1);
-                    setupLevel(board);
-                } else if (levelbox.getSelectedItem().equals("Level 2")) {
-                    board.setLevelNumber(2);
-                    setupLevel(board);
-                } else if (levelbox.getSelectedItem().equals("Level 3")) {
-                    board.setLevelNumber(3);
-                    setupLevel(board);
+                if (topCheck.isSelected()) {
+                    setAlwaysOnTop(true);
                 }
-            }
+                    if (levelbox.getSelectedItem().equals("Level 1")) {
+                        board.setLevelNumber(1);
+                        setupLevel(board);
+                    } else if (levelbox.getSelectedItem().equals("Level 2")) {
+                        board.setLevelNumber(2);
+                        setupLevel(board);
+                    } else if (levelbox.getSelectedItem().equals("Level 3")) {
+                        board.setLevelNumber(3);
+                        setupLevel(board);
+                    }
+                }
         });
         setVisible(true);
     }
@@ -53,6 +58,7 @@ public class Window extends JFrame {
         levellabel = new JLabel("Enter level:");
         levelbox = new JComboBox();
         start = new JButton("Start");
+        topCheck = new JCheckBox("Always on top");
         mainpanel = new JPanel(new BorderLayout());
         fieldpanel = new JPanel(new FlowLayout());
         buttonpanel = new JPanel(new FlowLayout());
@@ -63,6 +69,7 @@ public class Window extends JFrame {
 
         fieldpanel.add(levellabel);
         fieldpanel.add(levelbox);
+        buttonpanel.add(topCheck);
         buttonpanel.add(start);
         mainpanel.add(fieldpanel, BorderLayout.NORTH);
         mainpanel.add(buttonpanel, BorderLayout.CENTER);
