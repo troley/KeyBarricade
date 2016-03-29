@@ -95,39 +95,47 @@ public class GameBoard extends JPanel {
                         objects.add(new Wall(x, y));
                         x += OBJECT_SPACE;
                         break;
+
                     case 'u': // barricade object number 100
                         objects.add(new Barricade(x, y, ID.Object100));
                         x += OBJECT_SPACE;
                         break;
+                        
                     case 'i': // barricade object number 200
                         objects.add(new Barricade(x, y, ID.Object200));
                         x += OBJECT_SPACE;
                         break;
+                        
                     case 'o': // barricade object number 300
                         objects.add(new Barricade(x, y, ID.Object300));
                         x += OBJECT_SPACE;
                         break;
+                        
                     case '1': // key object number 100
                         key = new Key(x, y, ID.Object100);
                         objects.add(key);
                         x += OBJECT_SPACE;
                         break;
+                        
                     case '2': // key object number 200
                         key = new Key(x, y, ID.Object200);
                         objects.add(key);
                         x += OBJECT_SPACE;
                         break;
+                        
                     case '3': // key object number 300
                         key = new Key(x, y, ID.Object300);
                         objects.add(key);
                         x += OBJECT_SPACE;
                         break;
+                        
                     case 'p':
                         player = new Player(x, y);
                         objects.add(new Floor(x, y));
                         objects.add(player);
                         x += OBJECT_SPACE;
                         break;
+                        
                     case 'x':
                         objects.add(new Finish(x, y));
                         x += OBJECT_SPACE;
