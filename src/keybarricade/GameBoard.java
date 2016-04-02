@@ -12,6 +12,12 @@ import java.util.Scanner;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+/**
+ * This is the GameBoard Class, JPanel is extended and the game gets build.
+ * 
+ * 
+ * @author René Uhliar, Miladin Jeremic, Len van Kampen
+ */
 public class GameBoard extends JPanel {
 
     private final int WINDOW_OFFSET = 25;
@@ -27,6 +33,10 @@ public class GameBoard extends JPanel {
     private Player player;
     private Key key;
 
+    /**
+     * GameBoard Constructor
+     * Basic variables get set
+     */
     public GameBoard() {
         objects = new ArrayList<>();
         window = new Window("Key barricade", this);
@@ -37,26 +47,62 @@ public class GameBoard extends JPanel {
         setFocusable(true);
     }
 
+    /**
+     * Returns the levelWidth
+     * @return levelWidth
+     */
     public int getLevelWidth() {
         return levelWidth;
     }
 
+    /**
+     * Returns the levelHeight
+     * @return levelHeight
+     */
     public int getLevelHeight() {
         return levelHeight;
     }
 
+    /**
+     * Sets the level which is selected at the dropdown menu
+     * @param levelNumber
+     */
     public void setLevelNumber(int levelNumber) {
         this.levelNumber = levelNumber;
     }
 
+    /**
+     * Gets the level number, if at the startscreen the level 2 is 
+     * selected and 'start' is pressed, level 2 starts.
+     * @return
+     */
     public int getLevelNumber() {
         return levelNumber;
     }
 
+    /**
+     * The getCurrentFacingDirection is the direction the player is facing, 
+     * this is equal to the last key is pressed.
+     * 
+     * Example:
+     * If the player of the game pressed the down arrow on the keyboard,
+     * and there's a floor or key on the space under the player, the 
+     * player moves there and the current facing direction is downwards,
+     * then if the player has a key and wants to open a barricade on the right
+     * of the player, the player first needs to press the right arrow key on the
+     * keyboard, else the barricade won't open even if the player has the right key
+     * for the barricade.
+     * @return
+     */
     public int getCurrentFacingDirection() {
         return currentFacingDirection;
     }
 
+    /**
+     * initWorld creates the game, if on the startscreen level 2 is selected,
+     * this looks trough the "level2.txt" file and adds all the gameobjects to
+     * the game.
+     */
     public void initWorld() {
         int x = WINDOW_OFFSET;
         int y = WINDOW_OFFSET;
@@ -155,7 +201,13 @@ public class GameBoard extends JPanel {
         }
         window.setSize(getLevelWidth() + (WINDOW_OFFSET + 5), getLevelHeight() + (2 * WINDOW_OFFSET) + 4);
     }
-
+    
+    
+    /**
+     * The class buildLevel draws the correct objects on the right place
+     * on the level.
+     * @param g 
+     */
     private void buildLevel(Graphics g) {
         g.setColor(Color.LIGHT_GRAY);
         g.fillRect(0, 0, getWidth(), getHeight());
@@ -225,6 +277,10 @@ public class GameBoard extends JPanel {
         }
     }
 
+    /**
+     * Paints the level
+     * @param g
+     */
     @Override
     public void paint(Graphics g) {
         super.paint(g);
@@ -232,6 +288,10 @@ public class GameBoard extends JPanel {
         repaint();
     }
 
+    /**
+     * The class keyPressed arranges all the keyevents the 
+     * player can press on the keyboard.
+     */
     class KeyInput extends KeyAdapter {
 
         public void keyPressed(KeyEvent e) {
@@ -321,7 +381,11 @@ public class GameBoard extends JPanel {
             repaint();
         }
     }
-
+    /**
+     * If the player of the game pressed the "r" key, and selects "yes",
+     * the level gets reset to when it first started, the barricades 
+     * and keys gets restored.
+     */
     private void restartLevel() {
         objects.clear();
         player.setKeyInBag(null);
