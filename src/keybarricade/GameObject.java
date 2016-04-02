@@ -76,15 +76,17 @@ public abstract class GameObject {
     public boolean standsOnObject(GameObject object) {
         return (getX() == object.getX() && getY() == object.getY());
     }
-    
+
     /**
-     * Iterates through the given arraylist of gameobjects and checks if the 
-     * objects at the given direction are a barricade or a wall. 
-     * If so, the objects which is checking for collision
-     * will stand still and won't move to that location.
-     * @param objects the arraylist of gameobjects which may contain wall or barricade.
+     * Iterates through the given arraylist of gameobjects and checks if the
+     * objects at the given direction are a barricade or a wall. If so, the
+     * objects which is checking for collision will stand still and won't move
+     * to that location.
+     *
+     * @param objects the arraylist of gameobjects which may contain wall or
+     * barricade.
      * @param direction the direction at which a collision should be checked.
-     * @return 
+     * @return
      */
     public boolean checkCollision(ArrayList<GameObject> objects, int direction) {
         for (GameObject item : objects) {
@@ -102,7 +104,22 @@ public abstract class GameObject {
         }
         return false;
     }
-    
+
+    public boolean checkCollision(GameObject object, int direction) {
+        if (object instanceof Wall || object instanceof Barricade) {
+            if (this.topCollision(object) && direction == KeyEvent.VK_UP) {
+                return true;
+            } else if (this.bottomCollision(object) && direction == KeyEvent.VK_DOWN) {
+                return true;
+            } else if (this.leftCollision(object) && direction == KeyEvent.VK_LEFT) {
+                return true;
+            } else if (this.rightCollision(object) && direction == KeyEvent.VK_RIGHT) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // draws the strings of object IDs on barricades and keys
     public void drawObjectString(GameObject object, String stringNumber, Graphics g) {
         if (object instanceof Key) {

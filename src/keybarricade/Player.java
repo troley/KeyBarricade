@@ -77,6 +77,7 @@ public class Player extends GameObject {
         }
     }
 
+
     public void move(int x, int y) {
         this.setX(getX() + x);
         this.setY(getY() + y);
