@@ -13,10 +13,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
- * This is the GameBoard Class, JPanel is extended and the game gets build.
- * 
- * 
- * @author René Uhliar, Miladin Jeremic, Len van Kampen
+ * This class handles the most operations and basically the game play happens in
+ * this class.
+ *
+ * @author René Uhliar, Miladin Jeremić, Len van Kampen
  */
 public class GameBoard extends JPanel {
 
@@ -28,14 +28,12 @@ public class GameBoard extends JPanel {
     private int currentFacingDirection;
     private int levelNumber;
     private boolean completed;
-    private ArrayList<GameObject> objects;
+    private ArrayList<GameObject> objects; // every GameObject will be stored in here
     private Window window;
     private Player player;
-    private Key key;
 
     /**
-     * GameBoard Constructor
-     * Basic variables get set
+     * Constructs new GameBoard and initializes basic variables
      */
     public GameBoard() {
         objects = new ArrayList<>();
@@ -49,6 +47,7 @@ public class GameBoard extends JPanel {
 
     /**
      * Returns the levelWidth
+     *
      * @return levelWidth
      */
     public int getLevelWidth() {
@@ -57,6 +56,7 @@ public class GameBoard extends JPanel {
 
     /**
      * Returns the levelHeight
+     *
      * @return levelHeight
      */
     public int getLevelHeight() {
@@ -64,34 +64,35 @@ public class GameBoard extends JPanel {
     }
 
     /**
-     * Sets the level which is selected at the dropdown menu
-     * @param levelNumber
+     * Sets the level
+     *
+     * @param levelNumber the level number to be set
      */
     public void setLevelNumber(int levelNumber) {
         this.levelNumber = levelNumber;
     }
 
     /**
-     * Gets the level number, if at the startscreen the level 2 is 
-     * selected and 'start' is pressed, level 2 starts.
-     * @return
+     * Gets the level number.
+     *
+     * @return levelNumber
      */
     public int getLevelNumber() {
         return levelNumber;
     }
 
     /**
-     * The getCurrentFacingDirection is the direction the player is facing, 
-     * this is equal to the last key is pressed.
-     * 
-     * Example:
-     * If the player of the game pressed the down arrow on the keyboard,
-     * and there's a floor or key on the space under the player, the 
-     * player moves there and the current facing direction is downwards,
-     * then if the player has a key and wants to open a barricade on the right
-     * of the player, the player first needs to press the right arrow key on the
-     * keyboard, else the barricade won't open even if the player has the right key
-     * for the barricade.
+     * The getCurrentFacingDirection is the direction the player is facing, this
+     * is equal to the last key is pressed.
+     *
+     * Example: If the player of the game pressed the down arrow on the
+     * keyboard, and there's a floor or key on the space under the player, the
+     * player moves there and the current facing direction is downwards, then if
+     * the player has a key and wants to open a barricade on the right of the
+     * player, the player first needs to press the right arrow key on the
+     * keyboard, else the barricade won't open even if the player has the right
+     * key for the barricade.
+     *
      * @return
      */
     public int getCurrentFacingDirection() {
@@ -99,15 +100,25 @@ public class GameBoard extends JPanel {
     }
 
     /**
-     * initWorld creates the game, if on the startscreen level 2 is selected,
-     * this looks trough the "level2.txt" file and adds all the gameobjects to
-     * the game.
+     * initWorld creates the game, for example if on the startscreen level 2 is
+     * selected, this method looks for the "level2.txt" file and fills the
+     * objects ArrayList with all the objects read from that file. Also sets the
+     * optimal window size.
+     *
+     * The file characters representing GameObjects:
+     *
+     * n - new line (to increase the Y size of the window) p - player f - floor
+     * w - wall x - finish u - barricade with the object number 100 i -
+     * barricade with the object number 200 o - barricade with the object number
+     * 300 1 - key with the object number 100 2 - key with the object number 200
+     * 3 - key with the object number 300
      */
     public void initWorld() {
         int x = WINDOW_OFFSET;
         int y = WINDOW_OFFSET;
         String level = "";
 
+        // basically does everything that has to be done before the initialization of new level
         if (completed) {
             objects.removeAll(objects);
             setLevelNumber(getLevelNumber() + 1);
@@ -146,42 +157,39 @@ public class GameBoard extends JPanel {
                         objects.add(new Barricade(x, y, ID.Object100));
                         x += OBJECT_SPACE;
                         break;
-                        
+
                     case 'i': // barricade object number 200
                         objects.add(new Barricade(x, y, ID.Object200));
                         x += OBJECT_SPACE;
                         break;
-                        
+
                     case 'o': // barricade object number 300
                         objects.add(new Barricade(x, y, ID.Object300));
                         x += OBJECT_SPACE;
                         break;
-                        
+
                     case '1': // key object number 100
-                        key = new Key(x, y, ID.Object100);
-                        objects.add(key);
+                        objects.add(new Key(x, y, ID.Object100));
                         x += OBJECT_SPACE;
                         break;
-                        
+
                     case '2': // key object number 200
-                        key = new Key(x, y, ID.Object200);
-                        objects.add(key);
+                        objects.add(new Key(x, y, ID.Object200));
                         x += OBJECT_SPACE;
                         break;
-                        
+
                     case '3': // key object number 300
-                        key = new Key(x, y, ID.Object300);
-                        objects.add(key);
+                        objects.add(new Key(x, y, ID.Object300));
                         x += OBJECT_SPACE;
                         break;
-                        
+
                     case 'p':
                         player = new Player(x, y);
                         objects.add(new Floor(x, y));
                         objects.add(player);
                         x += OBJECT_SPACE;
                         break;
-                        
+
                     case 'x':
                         objects.add(new Finish(x, y));
                         x += OBJECT_SPACE;
@@ -190,24 +198,20 @@ public class GameBoard extends JPanel {
             }
             levelHeight = y;
         } catch (FileNotFoundException e) {
-            JOptionPane.showMessageDialog(this, e, "Error", JOptionPane.ERROR_MESSAGE);
-            System.exit(0);
-        }
-
-        if (getLevelWidth() > window.getWidth()) {
-            if (getLevelHeight() > window.getHeight()) {
-                window.setSize(getLevelWidth() + (WINDOW_OFFSET + 5), getLevelHeight() + (2 * WINDOW_OFFSET) + 4);
+            if (getLevelNumber() == window.getLevelCount() + 1) { // if the last level has been reached
+                JOptionPane.showMessageDialog(this, "Congratulations you've won the game!", "You won!", JOptionPane.INFORMATION_MESSAGE);
+                System.exit(0);
+            } else { // else if what ever else might happen other than reaching the last level
+                JOptionPane.showMessageDialog(this, e, "Error", JOptionPane.ERROR_MESSAGE);
+                System.out.println(getLevelNumber());
+                System.exit(0);
             }
         }
-        window.setSize(getLevelWidth() + (WINDOW_OFFSET + 5), getLevelHeight() + (2 * WINDOW_OFFSET) + 4);
+        // sets the window size so that the game level fits nicely in it
+        window.setSize(getLevelWidth() + (WINDOW_OFFSET + 4), getLevelHeight() + (2 * WINDOW_OFFSET) + 4);
     }
-    
-    
-    /**
-     * The class buildLevel draws the correct objects on the right place
-     * on the level.
-     * @param g 
-     */
+
+    // builds the world which is finally painted by the overriden paint method.
     private void buildLevel(Graphics g) {
         g.setColor(Color.LIGHT_GRAY);
         g.fillRect(0, 0, getWidth(), getHeight());
@@ -225,8 +229,7 @@ public class GameBoard extends JPanel {
                 }
             }
             if (object instanceof Finish) {
-                GameObject finish = object;
-                if (player.standsOnObject(finish)) {
+                if (player.standsOnObject(object)) {
                     completed = true;
                 }
             }
@@ -243,14 +246,12 @@ public class GameBoard extends JPanel {
             }
 
             if (object instanceof Barricade) {
-                if (!player.standsOnObject(object)) {
-                    if (object.getId() == ID.Object100) {
-                        object.drawObjectString(object, "100", g);
-                    } else if (object.getId() == ID.Object200) {
-                        object.drawObjectString(object, "200", g);
-                    } else if (object.getId() == ID.Object300) {
-                        object.drawObjectString(object, "300", g);
-                    }
+                if (object.getId() == ID.Object100) {
+                    object.drawObjectString(object, "100", g);
+                } else if (object.getId() == ID.Object200) {
+                    object.drawObjectString(object, "200", g);
+                } else if (object.getId() == ID.Object300) {
+                    object.drawObjectString(object, "300", g);
                 }
             }
         }
@@ -259,9 +260,9 @@ public class GameBoard extends JPanel {
         g.setColor(Color.BLACK);
         g.setFont(new Font(null, Font.PLAIN, 12));
         if (player.getKeyInBag() != null) {
-            g.drawString("Key: " + player.isKeyObtained() + ", Id: " + player.getKeyInBag().getId(), getWidth() / 2 - 45, 15);
+            g.drawString("Key: " + player.isKeyObtained() + ", Id: " + player.getKeyInBag().getId(), getWidth() / 2 - 65, 15);
         } else {
-            g.drawString("Key: " + player.isKeyObtained(), getWidth() / 2, 15);
+            g.drawString("Key: " + player.isKeyObtained(), getWidth() / 2 - 22, 15);
         }
 
         // draw black rectangles arround each object in the game
@@ -272,15 +273,13 @@ public class GameBoard extends JPanel {
             }
         }
 
+        // if the level has been completed, initialize the new level
         if (completed) {
             initWorld();
         }
     }
 
-    /**
-     * Paints the level
-     * @param g
-     */
+    // paints the game world
     @Override
     public void paint(Graphics g) {
         super.paint(g);
@@ -288,16 +287,14 @@ public class GameBoard extends JPanel {
         repaint();
     }
 
-    /**
-     * The class keyPressed arranges all the keyevents the 
-     * player can press on the keyboard.
-     */
+    // processes all the KeyEvents the player can press on the keyboard.
     class KeyInput extends KeyAdapter {
 
         public void keyPressed(KeyEvent e) {
             int input = e.getKeyCode();
             boolean justPickedUp = false;
             switch (input) {
+
                 case KeyEvent.VK_UP:
                     if (!completed) {
                         currentFacingDirection = KeyEvent.VK_UP;
@@ -343,21 +340,22 @@ public class GameBoard extends JPanel {
                     break;
 
                 case KeyEvent.VK_E:
-                    if (!completed) {
-                        for (int i = 0; i < objects.size(); i++) {
-                            GameObject item = objects.get(i);
-                            if (item instanceof Key) {
-                                if (player.standsOnObject(item)) {
-                                    player.setKeyInBag(new Key(player.getX(), player.getY(), item.getId()));
-                                    objects.remove(item);
-                                    justPickedUp = true;
-                                    player.setKeyObtained(true);
-                                }
+                    for (int i = 0; i < objects.size(); i++) {
+                        GameObject item = objects.get(i);
+                        if (item instanceof Key) {
+                            if (player.standsOnObject(item)) {
+                                player.setKeyInBag(new Key(player.getX(), player.getY(), item.getId()));
+                                objects.remove(item);
+                                justPickedUp = true;
+                                player.setKeyObtained(true);
                             }
                         }
-                        if (player.isKeyObtained() && !justPickedUp) {
-                            player.useKey(objects, GameBoard.this.getCurrentFacingDirection());
-                        }
+                    }
+                    break;
+
+                case KeyEvent.VK_Q:
+                    if (player.isKeyObtained() && !justPickedUp) {
+                        player.useKey(objects, GameBoard.this.getCurrentFacingDirection());
                     }
                     break;
 
@@ -377,14 +375,14 @@ public class GameBoard extends JPanel {
                     }
                     break;
             }
-            System.out.println("X: " + player.getX() + " Y: " + player.getY());
             repaint();
         }
     }
+
     /**
-     * If the player of the game pressed the "r" key, and selects "yes",
-     * the level gets reset to when it first started, the barricades 
-     * and keys gets restored.
+     * If the player of the game pressed the "r" key, and selects "yes", the
+     * level gets reset to when it first started, the barricades and keys gets
+     * restored.
      */
     private void restartLevel() {
         objects.clear();

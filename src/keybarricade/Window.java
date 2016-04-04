@@ -5,7 +5,6 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,7 +13,7 @@ import javax.swing.JPanel;
 /**
  * The Window class extends JFrame and creates the frame of the board.
  * 
- * @author René Uhliar, Miladin Jeremic, Len van Kampen
+ * @author René Uhliar, Miladin Jeremić, Len van Kampen
  */
 public class Window extends JFrame {
 
@@ -24,38 +23,25 @@ public class Window extends JFrame {
     private JPanel mainpanel;
     private JPanel fieldpanel;
     private JPanel buttonpanel;
-    private JCheckBox topCheck;
 
     /**
-     * The Window constructor takes the parameters title and board 
-     * and has an inner-class "actionPerformed" where the menu starts 
-     * and where the level gets selected and game gets started.
+     * Constructs a new JFrame window where a game level can be selected
+     * and started. Also has an check option to keep the window always on top.
      * 
-     * 
-     * @param title
-     * @param board
+     * @param title the Window title.
+     * @param board the GameBoard which is responsible for everything else after 
+     * the game has been started.
      */
     public Window(String title, final GameBoard board) {
         createGameWindow(title);
-        startComponentsInit(); //initialize components "start" button included
-        /*
-        some standard parameters, makes the game focusable, rezizable, and is shown on the monitor.
-        */
+        startComponentsInit();
         setFocusable(true);
         setResizable(false);
         setVisible(true);
-        /**
-         * The Inner-class, the selected level starts if the player clicks on 
-         * the start button.
-         * If the square "always on top" is selected, the game window will always 
-         * be seen on the monitor.
-         */
+
         start.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (topCheck.isSelected()) {
-                    setAlwaysOnTop(true);
-                }
                     if (levelbox.getSelectedItem().equals("Level 1")) {
                         board.setLevelNumber(1);
                         setupLevel(board);
@@ -70,13 +56,11 @@ public class Window extends JFrame {
         });
     }
     
-    /**
-     * createGameWindow sets some standard parameters as:
-     * the title of the game, width and height of the game screen,
-     * closes the game and shuts the game down if the window is closed.
-     * 
-     * @param title 
-     */
+    public int getLevelCount() {
+        return levelbox.getItemCount();
+    }
+    
+    // set some basic stuff up in the JFrame
     private void createGameWindow(String title) {
         this.setTitle(title);
         this.setSize(300, 150);
@@ -84,15 +68,11 @@ public class Window extends JFrame {
         this.setLocationRelativeTo(null);
     }
 
-    /**
-     * startComponentsInit class adds components of
-     * the level select menu together.
-     */
+    // initializes the components of the level select menu
     private void startComponentsInit() {
         levellabel = new JLabel("Enter level:");
         levelbox = new JComboBox();
         start = new JButton("Start");
-        topCheck = new JCheckBox("Always on top");
         mainpanel = new JPanel(new BorderLayout());
         fieldpanel = new JPanel(new FlowLayout());
         buttonpanel = new JPanel(new FlowLayout());
@@ -103,19 +83,13 @@ public class Window extends JFrame {
 
         fieldpanel.add(levellabel);
         fieldpanel.add(levelbox);
-        buttonpanel.add(topCheck);
         buttonpanel.add(start);
         mainpanel.add(fieldpanel, BorderLayout.NORTH);
         mainpanel.add(buttonpanel, BorderLayout.CENTER);
         add(mainpanel);
     }
 
-    /**
-     * The setupLevel class takes board as parameter, this gets called
-     * if the level is selected and the start button is pressed.
-     * it removes the first screen and creates the game on the level which is selected.
-     * @param board 
-     */
+    // should be called at the game start to setup the level objects etc.
     private void setupLevel(GameBoard board) {
         this.remove(mainpanel);
         board.initWorld(); // creates objects in the world AND sets the frame size so the game fits in it
