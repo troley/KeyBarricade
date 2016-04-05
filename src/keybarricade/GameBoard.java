@@ -144,10 +144,12 @@ public class GameBoard extends JPanel {
 
                         x = WINDOW_OFFSET;
                         break;
+                        
                     case 'f':
                         objects.add(new Floor(x, y));
                         x += OBJECT_SPACE;
                         break;
+                        
                     case 'w':
                         objects.add(new Wall(x, y));
                         x += OBJECT_SPACE;
@@ -231,6 +233,7 @@ public class GameBoard extends JPanel {
             if (object instanceof Finish) {
                 if (player.standsOnObject(object)) {
                     completed = true;
+                    repaint();
                 }
             }
             if (object instanceof Key) {
@@ -278,13 +281,11 @@ public class GameBoard extends JPanel {
             initWorld();
         }
     }
-
-    // paints the game world
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-        buildLevel(g);
-        repaint();
+    // no needless repaints after every single key press even if colliding with object (better performance)
+    private void directionRepaint(int keyEventDirection) {
+        if(currentFacingDirection != keyEventDirection) {
+            repaint();
+        }
     }
 
     // processes all the KeyEvents the player can press on the keyboard.
@@ -292,23 +293,26 @@ public class GameBoard extends JPanel {
 
         public void keyPressed(KeyEvent e) {
             int input = e.getKeyCode();
-            boolean justPickedUp = false;
             switch (input) {
 
                 case KeyEvent.VK_UP:
                     if (!completed) {
+                        directionRepaint(KeyEvent.VK_UP);
                         currentFacingDirection = KeyEvent.VK_UP;
+                        player.setPlayerImage("playerUp.png");
                         if (player.checkCollision(objects, currentFacingDirection)
                                 || player.getY() <= OBJECT_SPACE) {
                             return;
                         }
                         player.move(0, -OBJECT_SPACE);
                     }
-                    break;
-
+                break;
+                    
                 case KeyEvent.VK_DOWN:
                     if (!completed) {
+                        directionRepaint(KeyEvent.VK_DOWN);
                         currentFacingDirection = KeyEvent.VK_DOWN;
+                        player.setPlayerImage("playerDown.png");
                         if (player.checkCollision(objects, currentFacingDirection)
                                 || player.getY() >= getLevelHeight() - OBJECT_SPACE) {
                             return;
@@ -319,7 +323,9 @@ public class GameBoard extends JPanel {
 
                 case KeyEvent.VK_LEFT:
                     if (!completed) {
+                        directionRepaint(KeyEvent.VK_LEFT);
                         currentFacingDirection = KeyEvent.VK_LEFT;
+                        player.setPlayerImage("playerLeft.png");
                         if (player.checkCollision(objects, currentFacingDirection)
                                 || player.getX() <= OBJECT_SPACE) {
                             return;
@@ -330,7 +336,9 @@ public class GameBoard extends JPanel {
 
                 case KeyEvent.VK_RIGHT:
                     if (!completed) {
+                        directionRepaint(KeyEvent.VK_RIGHT);
                         currentFacingDirection = KeyEvent.VK_RIGHT;
+                        player.setPlayerImage("playerRight.png");
                         if (player.checkCollision(objects, currentFacingDirection)
                                 || player.getX() >= getLevelWidth() - OBJECT_SPACE) {
                             return;
@@ -346,7 +354,6 @@ public class GameBoard extends JPanel {
                             if (player.standsOnObject(item)) {
                                 player.setKeyInBag(new Key(player.getX(), player.getY(), item.getId()));
                                 objects.remove(item);
-                                justPickedUp = true;
                                 player.setKeyObtained(true);
                             }
                         }
@@ -354,7 +361,7 @@ public class GameBoard extends JPanel {
                     break;
 
                 case KeyEvent.VK_Q:
-                    if (player.isKeyObtained() && !justPickedUp) {
+                    if (player.isKeyObtained()) {
                         player.useKey(objects, GameBoard.this.getCurrentFacingDirection());
                     }
                     break;
@@ -390,5 +397,12 @@ public class GameBoard extends JPanel {
         player.setKeyObtained(false);
         completed = false;
         initWorld();
+    }
+    
+    // paints the game world
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+        buildLevel(g);
     }
 }

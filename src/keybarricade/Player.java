@@ -1,7 +1,6 @@
 package keybarricade;
 
 import java.awt.Image;
-import java.awt.event.KeyEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
@@ -29,10 +28,7 @@ public class Player extends GameObject {
         keyObtained = false;
         keyInBag = null;
 
-        URL imageUrl = this.getClass().getResource("player.png");
-        ImageIcon icon = new ImageIcon(imageUrl);
-        Image img = icon.getImage();
-        setImage(img);
+        this.setPlayerImage("playerDown.png");
     }
 
     /**
@@ -97,6 +93,13 @@ public class Player extends GameObject {
                 }
             }
         }
+    }
+    
+    public void setPlayerImage(String imgFile) {
+        URL imageUrl = this.getClass().getResource(imgFile);
+        ImageIcon icon = new ImageIcon(imageUrl);
+        Image img = icon.getImage();
+        setImage(img);
     }
     
     /**

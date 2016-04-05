@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 
 /**
  * The Window class extends JFrame and creates the frame of the board.
- * 
+ *
  * @author René Uhliar, Miladin Jeremić, Len van Kampen
  */
 public class Window extends JFrame {
@@ -25,11 +25,11 @@ public class Window extends JFrame {
     private JPanel buttonpanel;
 
     /**
-     * Constructs a new JFrame window where a game level can be selected
-     * and started. Also has an check option to keep the window always on top.
-     * 
+     * Constructs a new JFrame window where a game level can be selected and
+     * started. Also has an check option to keep the window always on top.
+     *
      * @param title the Window title.
-     * @param board the GameBoard which is responsible for everything else after 
+     * @param board the GameBoard which is responsible for everything else after
      * the game has been started.
      */
     public Window(String title, final GameBoard board) {
@@ -42,24 +42,24 @@ public class Window extends JFrame {
         start.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                    if (levelbox.getSelectedItem().equals("Level 1")) {
-                        board.setLevelNumber(1);
-                        setupLevel(board);
-                    } else if (levelbox.getSelectedItem().equals("Level 2")) {
-                        board.setLevelNumber(2);
-                        setupLevel(board);
-                    } else if (levelbox.getSelectedItem().equals("Level 3")) {
-                        board.setLevelNumber(3);
-                        setupLevel(board);
-                    }
+                if (levelbox.getSelectedItem().equals("Level 1")) {
+                    board.setLevelNumber(1);
+                    setupLevel(board);
+                } else if (levelbox.getSelectedItem().equals("Level 2")) {
+                    board.setLevelNumber(2);
+                    setupLevel(board);
+                } else if (levelbox.getSelectedItem().equals("Level 3")) {
+                    board.setLevelNumber(3);
+                    setupLevel(board);
                 }
+            }
         });
     }
-    
+
     public int getLevelCount() {
         return levelbox.getItemCount();
     }
-    
+
     // set some basic stuff up in the JFrame
     private void createGameWindow(String title) {
         this.setTitle(title);
