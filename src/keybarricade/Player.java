@@ -16,6 +16,7 @@ public class Player extends GameObject {
 
     private boolean keyObtained;
     private Key keyInBag;
+    private int facingDirection;
 
     /**
      * Constructs a new player at the X and Y position with no key on him.
@@ -27,6 +28,7 @@ public class Player extends GameObject {
         super(x, y);
         keyObtained = false;
         keyInBag = null;
+        facingDirection = 0;
 
         this.setPlayerImage("playerDown.png");
     }
@@ -67,6 +69,32 @@ public class Player extends GameObject {
         this.keyInBag = keyInBag;
     }
 
+    /**
+     * The getfacingDirection is the direction the player is facing, this
+     * is equal to the last (arrow)key that was pressed.
+     *
+     * Example: If the player of the game pressed the down arrow on the
+     * keyboard, and there's a floor or key on the space under the player, the
+     * player moves there and the current facing direction is downwards, then if
+     * the player has a key and wants to open a barricade on the right of the
+     * player, the player first needs to press the right arrow key on the
+     * keyboard, else the barricade won't open even if the player has the right
+     * key for the barricade.
+     *
+     * @return facingDirection - the current facing direction of the player.
+     */
+    public int getFacingDirection() {
+        return facingDirection;
+    }
+    
+    /**
+     * Sets the facing direction of the player.
+     * @param facingDirection the direction which the player is facing.
+     */
+    public void setFacingDirection(int facingDirection) {
+        this.facingDirection = facingDirection;
+    }
+    
     /**
      * Iterates through the given ArrayList parameter and looks for a Barricade
      * object. Then it gets the current facing direction (Up, down, left, right)

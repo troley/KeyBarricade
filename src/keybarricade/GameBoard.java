@@ -13,8 +13,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
- * This class handles the most operations and basically the game play happens in
- * this class.
+ * This class handles the most operations together with KeyInput inner-class
+ * and basically the drawing/game play happens in these classes.
  *
  * @author René Uhliar, Miladin Jeremić, Len van Kampen
  */
@@ -25,7 +25,6 @@ public class GameBoard extends JPanel {
 
     private int levelWidth;
     private int levelHeight;
-    private int currentFacingDirection;
     private int levelNumber;
     private boolean completed;
     private ArrayList<GameObject> objects; // every GameObject will be stored in here
@@ -40,7 +39,6 @@ public class GameBoard extends JPanel {
         window = new Window("Key barricade", this);
         levelWidth = 0;
         levelHeight = 0;
-        currentFacingDirection = 0;
         addKeyListener(new KeyInput());
         setFocusable(true);
     }
@@ -79,24 +77,6 @@ public class GameBoard extends JPanel {
      */
     public int getLevelNumber() {
         return levelNumber;
-    }
-
-    /**
-     * The getCurrentFacingDirection is the direction the player is facing, this
-     * is equal to the last key is pressed.
-     *
-     * Example: If the player of the game pressed the down arrow on the
-     * keyboard, and there's a floor or key on the space under the player, the
-     * player moves there and the current facing direction is downwards, then if
-     * the player has a key and wants to open a barricade on the right of the
-     * player, the player first needs to press the right arrow key on the
-     * keyboard, else the barricade won't open even if the player has the right
-     * key for the barricade.
-     *
-     * @return
-     */
-    public int getCurrentFacingDirection() {
-        return currentFacingDirection;
     }
 
     /**
@@ -283,7 +263,7 @@ public class GameBoard extends JPanel {
     }
     // no needless repaints after every single key press even if colliding with object (better performance)
     private void directionRepaint(int keyEventDirection) {
-        if(currentFacingDirection != keyEventDirection) {
+        if(player.getFacingDirection() != keyEventDirection) {
             repaint();
         }
     }
@@ -298,9 +278,9 @@ public class GameBoard extends JPanel {
                 case KeyEvent.VK_UP:
                     if (!completed) {
                         directionRepaint(KeyEvent.VK_UP);
-                        currentFacingDirection = KeyEvent.VK_UP;
+                        player.setFacingDirection(KeyEvent.VK_UP);
                         player.setPlayerImage("playerUp.png");
-                        if (player.checkCollision(objects, currentFacingDirection)
+                        if (player.checkCollision(objects, player.getFacingDirection())
                                 || player.getY() <= OBJECT_SPACE) {
                             return;
                         }
@@ -311,9 +291,9 @@ public class GameBoard extends JPanel {
                 case KeyEvent.VK_DOWN:
                     if (!completed) {
                         directionRepaint(KeyEvent.VK_DOWN);
-                        currentFacingDirection = KeyEvent.VK_DOWN;
+                        player.setFacingDirection(KeyEvent.VK_DOWN);
                         player.setPlayerImage("playerDown.png");
-                        if (player.checkCollision(objects, currentFacingDirection)
+                        if (player.checkCollision(objects, player.getFacingDirection())
                                 || player.getY() >= getLevelHeight() - OBJECT_SPACE) {
                             return;
                         }
@@ -324,9 +304,9 @@ public class GameBoard extends JPanel {
                 case KeyEvent.VK_LEFT:
                     if (!completed) {
                         directionRepaint(KeyEvent.VK_LEFT);
-                        currentFacingDirection = KeyEvent.VK_LEFT;
+                        player.setFacingDirection(KeyEvent.VK_LEFT);
                         player.setPlayerImage("playerLeft.png");
-                        if (player.checkCollision(objects, currentFacingDirection)
+                        if (player.checkCollision(objects, player.getFacingDirection())
                                 || player.getX() <= OBJECT_SPACE) {
                             return;
                         }
@@ -337,9 +317,9 @@ public class GameBoard extends JPanel {
                 case KeyEvent.VK_RIGHT:
                     if (!completed) {
                         directionRepaint(KeyEvent.VK_RIGHT);
-                        currentFacingDirection = KeyEvent.VK_RIGHT;
+                        player.setFacingDirection(KeyEvent.VK_RIGHT);
                         player.setPlayerImage("playerRight.png");
-                        if (player.checkCollision(objects, currentFacingDirection)
+                        if (player.checkCollision(objects, player.getFacingDirection())
                                 || player.getX() >= getLevelWidth() - OBJECT_SPACE) {
                             return;
                         }
@@ -362,7 +342,7 @@ public class GameBoard extends JPanel {
 
                 case KeyEvent.VK_Q:
                     if (player.isKeyObtained()) {
-                        player.useKey(objects, GameBoard.this.getCurrentFacingDirection());
+                        player.useKey(objects, player.getFacingDirection());
                     }
                     break;
 
