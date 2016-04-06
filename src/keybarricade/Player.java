@@ -19,7 +19,7 @@ public class Player extends GameObject {
     private int facingDirection;
 
     /**
-     * Constructs a new player at the X and Y position with no key on him.
+     * Constructs a new player at the X and Y position with no key on him and facing down.
      *
      * @param x the x position
      * @param y the y position
@@ -29,7 +29,6 @@ public class Player extends GameObject {
         keyObtained = false;
         keyInBag = null;
         facingDirection = 0;
-
         this.setPlayerImage("playerDown.png");
     }
 
@@ -47,8 +46,8 @@ public class Player extends GameObject {
      *
      * @param hasKey set to true if a key has been obtained
      */
-    public void setKeyObtained(boolean hasKey) {
-        this.keyObtained = hasKey;
+    public void setKeyObtained(boolean keyObtained) {
+        this.keyObtained = keyObtained;
     }
 
     /**
@@ -104,7 +103,7 @@ public class Player extends GameObject {
      * @param objects the ArrayList of game objects.
      * @param currentFacingDirection the current facing direction of the player.
      */
-    public void useKey(ArrayList<GameObject> objects, int currentFacingDirection) {
+    public void useKey(ArrayList<GameObject> objects, int facingDirection) {
         for (int i = 0; i < objects.size(); i++) {
             GameObject object = objects.get(i);
             
@@ -112,10 +111,10 @@ public class Player extends GameObject {
                 
                 boolean keyFits = getKeyInBag().getId().equals(object.getId());
 
-                if(this.checkCollision(object, currentFacingDirection) // if key doesn't fit the barricade
+                if(this.checkCollision(object, facingDirection) // if key doesn't fit the barricade
                         && !keyFits) {
                     JOptionPane.showMessageDialog(null, "Key doesn't fit.", "Oops!", JOptionPane.WARNING_MESSAGE);
-                } else if (this.checkCollision(object, currentFacingDirection) // if key fits the barricade
+                } else if (this.checkCollision(object, facingDirection) // if key fits the barricade
                         && keyFits) {
                     objects.remove(object);
                 }

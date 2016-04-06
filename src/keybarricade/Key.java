@@ -26,4 +26,5 @@ public class Key extends GameObject {
         Image img = icon.getImage();
         setImage(img);
     }
+
 }

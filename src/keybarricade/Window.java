@@ -17,6 +17,7 @@ import javax.swing.JPanel;
  */
 public class Window extends JFrame {
 
+    private JLabel readMeLabel;
     private JLabel levellabel;
     private JComboBox levelbox;
     private JButton start;
@@ -71,6 +72,7 @@ public class Window extends JFrame {
     // initializes the components of the level select menu
     private void startComponentsInit() {
         levellabel = new JLabel("Enter level:");
+        readMeLabel = new JLabel("For how to play instruction read README.txt");
         levelbox = new JComboBox();
         start = new JButton("Start");
         mainpanel = new JPanel(new BorderLayout());
@@ -84,6 +86,7 @@ public class Window extends JFrame {
         fieldpanel.add(levellabel);
         fieldpanel.add(levelbox);
         buttonpanel.add(start);
+        buttonpanel.add(readMeLabel);
         mainpanel.add(fieldpanel, BorderLayout.NORTH);
         mainpanel.add(buttonpanel, BorderLayout.CENTER);
         add(mainpanel);
@@ -92,7 +95,7 @@ public class Window extends JFrame {
     // should be called at the game start to setup the level objects etc.
     private void setupLevel(GameBoard board) {
         this.remove(mainpanel);
-        board.initWorld(); // creates objects in the world AND sets the frame size so the game fits in it
+        board.initLevel(); // creates objects in the world AND sets the frame size so the game fits in it
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.add(board);

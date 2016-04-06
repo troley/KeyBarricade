@@ -172,7 +172,8 @@ public abstract class GameObject {
      * a barricade).
      * 
      * @param objects the ArrayList of GameObjects which may contain wall or barricade.
-     * @param direction the direction at which a collision should be checked.
+     * @param direction the direction at which a collision should be checked (KeyEvent.VK_UP,
+     * KeyEvent.VK_DOWN, KeyEvent.VK_LEFT or KeyEvent.VK_RIGHT).
      * @return true if one of the objects from the ArrayList is a Wall or a Barricade
      * and if the Wall or the Barricade are at the given direction.
      */
@@ -200,7 +201,8 @@ public abstract class GameObject {
      * a barricade).
      * 
      * @param objects the arraylist of gameobjects which may contain wall or barricade.
-     * @param direction the direction at which a collision should be checked.
+     * @param direction the direction at which a collision should be checked (KeyEvent.VK_UP,
+     * KeyEvent.VK_DOWN, KeyEvent.VK_LEFT or KeyEvent.VK_RIGHT).
      * @return true if the object is an instance of Wall or Barricade and if the
      * Wall or the Barricade are at the given direction
      */
