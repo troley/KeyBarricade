@@ -9,7 +9,7 @@ package keybarricade;
 public class Main {
 
     /**
-     * Main Method, this class is mandatory and starts the game by calling the GameBoard.
+     * Main Method, this class is mandatory and starts the game by invoking the GameBoard.
      * 
      * @param args
      */

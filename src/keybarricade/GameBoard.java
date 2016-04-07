@@ -242,7 +242,6 @@ public class GameBoard extends JPanel {
         // draw black rectangles arround each object in the game to create a grid
         for (int k = WINDOW_OFFSET; k < levelWidth; k += OBJECT_SPACE) {
             for (int j = WINDOW_OFFSET; j < levelHeight; j += OBJECT_SPACE) {
-                g.setColor(Color.BLACK);
                 g.drawRect(k, j, OBJECT_SPACE, OBJECT_SPACE);
             }
         }
