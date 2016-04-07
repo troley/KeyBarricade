@@ -5,24 +5,26 @@ import java.net.URL;
 import javax.swing.ImageIcon;
 
 /**
- * The Key Class shows the key as "key.png" on the board.
- * @author René Uhliar, Miladin Jeremic, Len van Kampen
+ * The Key Class shows the Key with the given image on the board.
+ * 
+ * @author René Uhliar, Miladin Jeremić, Len van Kampen
  */
 public class Key extends GameObject {
 
     /**
      * Key has x and y coordinates and and id, if the key id
      * is the same as the barricade id the barricade will be opened.
-     * @param x
-     * @param y
-     * @param id
+     * @param x the x coordinate of the Key
+     * @param y the y coordinate of the Key
+     * @param id the id of the Key
      */
     public Key(int x, int y, ID id) {
         super(x, y, id);
-    
-        URL loc = this.getClass().getResource("key.png");
-        ImageIcon iia = new ImageIcon(loc);
-        Image image = iia.getImage();
-        setImage(image);
+        
+        URL imageUrl = this.getClass().getResource("key.png");
+        ImageIcon icon = new ImageIcon(imageUrl);
+        Image img = icon.getImage();
+        setImage(img);
     }
+
 }

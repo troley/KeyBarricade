@@ -19,10 +19,10 @@ public class Wall extends GameObject {
      */
     public Wall(int x, int y) {
         super(x, y);
-        
-        URL loc = this.getClass().getResource("wall.png");
-        ImageIcon iia = new ImageIcon(loc);
-        Image image = iia.getImage();
-        setImage(image);
+
+        URL imageUrl = this.getClass().getResource("wall.png");
+        ImageIcon icon = new ImageIcon(imageUrl);
+        Image img = icon.getImage();
+        setImage(img);
     }
 }

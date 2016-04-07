@@ -1,117 +1,139 @@
 package keybarricade;
 
 import java.awt.Image;
-import java.awt.event.KeyEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 /**
- * The player Class creates the player on the gameboard and 
- * makes the player be able to move on the board.
- * 
- * @author René Uhliar, Miladin Jeremic, Len van Kampen
+ * The player class creates the player on the GameBoard with the corresponding
+ * image and makes the player be able to move on the board.
+ *
+ * @author René Uhliar, Miladin Jeremić, Len van Kampen
  */
 public class Player extends GameObject {
 
     private boolean keyObtained;
     private Key keyInBag;
+    private int facingDirection;
 
     /**
-     * The player constructor sets the player on the board as 
-     * an image "player.png". 
-     * And sets the variables keyObtained and KeyInbag to false and null, this
-     * means that when the level starts, the player has no key.
-     * The x and y params are for the player location.
-     * @param x
-     * @param y
+     * Constructs a new player at the X and Y position with no key on him and facing down.
+     *
+     * @param x the x position
+     * @param y the y position
      */
     public Player(int x, int y) {
         super(x, y);
         keyObtained = false;
         keyInBag = null;
-
-        URL loc = this.getClass().getResource("player.png");
-        ImageIcon iia = new ImageIcon(loc);
-        Image image = iia.getImage();
-        setImage(image);
+        facingDirection = 0;
+        this.setPlayerImage("playerDown.png");
     }
 
     /**
-     * returns if a key is obtained;
-     * @return
+     * Checks if a key has been obtained
+     *
+     * @return true if keyObtained is true
      */
     public boolean isKeyObtained() {
         return keyObtained;
     }
 
     /**
-     * set keyObtained to true or false.
-     * @param hasKey
+     * Set the keyObtained boolean
+     *
+     * @param hasKey set to true if a key has been obtained
      */
-    public void setKeyObtained(boolean hasKey) {
-        this.keyObtained = hasKey;
+    public void setKeyObtained(boolean keyObtained) {
+        this.keyObtained = keyObtained;
     }
 
     /**
-     * Looks if a key is taken.
-     * @return
+     * Gets the current key which is in the bag
+     *
+     * @return the Key which is at that moment in the bag
      */
     public Key getKeyInBag() {
         return keyInBag;
     }
 
     /**
-     * Takes a key.
-     * @param keyInBag
+     * Sets a Key in bag.
+     *
+     * @param keyInBag the Key which should be set into the bag
      */
     public void setKeyInBag(Key keyInBag) {
         this.keyInBag = keyInBag;
     }
 
     /**
-     * Iterates through the given arraylist and looks for a Barricade object.
-     * Then it gets the current facing direction (Up, down, left, right) and
-     * tries to open the barricade (if it meets the assignment conditions).
+     * The getfacingDirection is the direction the player is facing, this
+     * is equal to the last (arrow)key that was pressed.
      *
-     * @param objects the arraylist of game objects where a Key object can be
-     * found.
+     * Example: If the player of the game pressed the down arrow on the
+     * keyboard, and there's a floor or key on the space under the player, the
+     * player moves there and the current facing direction is downwards, then if
+     * the player has a key and wants to open a barricade on the right of the
+     * player, the player first needs to press the right arrow key on the
+     * keyboard, else the barricade won't open even if the player has the right
+     * key for the barricade.
+     *
+     * @return facingDirection - the current facing direction of the player.
+     */
+    public int getFacingDirection() {
+        return facingDirection;
+    }
+    
+    /**
+     * Sets the facing direction of the player.
+     * @param facingDirection the direction which the player is facing.
+     */
+    public void setFacingDirection(int facingDirection) {
+        this.facingDirection = facingDirection;
+    }
+    
+    /**
+     * Iterates through the given ArrayList parameter and looks for a Barricade
+     * object. Then it gets the current facing direction (Up, down, left, right)
+     * and opens the barricade at the facing direction if the key id equals the
+     * barricade id.
+     *
+     * @param objects the ArrayList of game objects.
      * @param currentFacingDirection the current facing direction of the player.
      */
-    public void useKey(ArrayList<GameObject> objects, int currentFacingDirection) {
-        if (isKeyObtained()) {
-            for (int i = 0; i < objects.size(); i++) {
-                GameObject object = objects.get(i);
-                if (object instanceof Barricade) {
+    public void useKey(ArrayList<GameObject> objects, int facingDirection) {
+        for (int i = 0; i < objects.size(); i++) {
+            GameObject object = objects.get(i);
+            
+            if (object instanceof Barricade) {
+                
+                boolean keyFits = getKeyInBag().getId().equals(object.getId());
 
-                    boolean keyFits = getKeyInBag().getId().equals(object.getId());
-
-                    if (this.topCollision(object)
-                            && currentFacingDirection == KeyEvent.VK_UP
-                            && keyFits) {
-                        objects.remove(object);
-                    } else if (this.bottomCollision(object)
-                            && currentFacingDirection == KeyEvent.VK_DOWN
-                            && keyFits) {
-                        objects.remove(object);
-                    } else if (this.leftCollision(object)
-                            && currentFacingDirection == KeyEvent.VK_LEFT
-                            && keyFits) {
-                        objects.remove(object);
-                    } else if (this.rightCollision(object)
-                            && currentFacingDirection == KeyEvent.VK_RIGHT
-                            && keyFits) {
-                        objects.remove(object);
-                    }
+                if(this.checkCollision(object, facingDirection) // if key doesn't fit the barricade
+                        && !keyFits) {
+                    JOptionPane.showMessageDialog(null, "Key doesn't fit.", "Oops!", JOptionPane.WARNING_MESSAGE);
+                } else if (this.checkCollision(object, facingDirection) // if key fits the barricade
+                        && keyFits) {
+                    objects.remove(object);
                 }
             }
         }
     }
-
+    
+    public void setPlayerImage(String imgFile) {
+        URL imageUrl = this.getClass().getResource(imgFile);
+        ImageIcon icon = new ImageIcon(imageUrl);
+        Image img = icon.getImage();
+        setImage(img);
+    }
+    
     /**
-     * sets the position, moves the player.
-     * @param x
-     * @param y
+     * Moves the player to the given X and Y coordinates.
+     *
+     * @param x the x coordinate
+     * @param y the y coordinate
      */
     public void move(int x, int y) {
         this.setX(getX() + x);

@@ -1,41 +1,14 @@
 package keybarricade;
 
 /**
- * The ID class has enum and is a list of constants. 
- * These show the id's of the objects.
+ * This enum holds the id constants used by barricades and keys.
  * 
- * @author René Uhliar, Miladin Jeremic, Len van Kampen
+ * @author René Uhliar, Miladin Jeremić, Len van Kampen
  */
 public enum ID {
     
-    /**
-     *
-     */
-    Object30,
-
-    /**
-     *
-     */
-    Object50,
-
-    /**
-     *
-     */
-    Object90,
-
-    /**
-     *
-     */
     Object100,
-
-    /**
-     *
-     */
     Object200,
-
-    /**
-     *
-     */
     Object300;
 
 }
