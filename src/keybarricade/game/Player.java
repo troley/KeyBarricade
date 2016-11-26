@@ -1,4 +1,4 @@
-package keybarricade;
+package keybarricade.game;
 
 import java.awt.Image;
 import java.net.URL;
@@ -29,7 +29,7 @@ public class Player extends GameObject {
         keyObtained = false;
         keyInBag = null;
         facingDirection = 0;
-        this.setPlayerImage("playerDown.png");
+        this.setPlayerImage("../imgs/playerDown.png");
     }
 
     /**
@@ -124,7 +124,7 @@ public class Player extends GameObject {
     
     public void setPlayerImage(String imgFile) {
         URL imageUrl = this.getClass().getResource(imgFile);
-        ImageIcon icon = new ImageIcon(imageUrl);
+        ImageIcon icon = new ImageIcon(imageUrl.getFile());
         Image img = icon.getImage();
         setImage(img);
     }

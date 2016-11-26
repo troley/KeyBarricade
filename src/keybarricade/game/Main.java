@@ -1,4 +1,4 @@
-package keybarricade;
+package keybarricade.game;
 
 /**
  * This is the main Class

@@ -1,4 +1,4 @@
-package keybarricade;
+package keybarricade.game;
 
 import java.awt.Image;
 import java.net.URL;
@@ -20,7 +20,7 @@ public class Finish extends GameObject {
     public Finish(int x, int y) {
         super(x, y);
    
-        URL imageUrl = this.getClass().getResource("finish.png");
+        URL imageUrl = this.getClass().getResource("../imgs/finish.png");
         ImageIcon icon = new ImageIcon(imageUrl);
         Image img = icon.getImage();
         setImage(img);

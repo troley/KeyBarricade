@@ -1,4 +1,4 @@
-package keybarricade;
+package keybarricade.game;
 
 /**
  * This enum holds the id constants used by barricades and keys.

@@ -1,4 +1,4 @@
-package keybarricade;
+package keybarricade.game;
 
 import java.awt.Color;
 import java.awt.Font;

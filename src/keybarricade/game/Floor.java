@@ -1,4 +1,4 @@
-package keybarricade;
+package keybarricade.game;
 
 /**
  * The Floor class sets the x and y coordinates of the floor.

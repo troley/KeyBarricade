@@ -1,4 +1,4 @@
-package keybarricade;
+package keybarricade.game;
 
 import java.awt.Image;
 import java.net.URL;
@@ -21,7 +21,7 @@ public class Key extends GameObject {
     public Key(int x, int y, ID id) {
         super(x, y, id);
         
-        URL imageUrl = this.getClass().getResource("key.png");
+        URL imageUrl = this.getClass().getResource("../imgs/key.png");
         ImageIcon icon = new ImageIcon(imageUrl);
         Image img = icon.getImage();
         setImage(img);
