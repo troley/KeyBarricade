@@ -6,4 +6,4 @@ The point in this game is to get from one point in te room (spawn place) to the 
 
 It was a great assignment to work on, especially because I learned a lot from it. For example, I learned more about inheritance, polymorphism, abstract classes, (Object) methods overriding, the use of enumeration classes and so forth.
 
-** PROJECT MADE PUBLIC 26/11/2016 **
+** PROJECT MADE PUBLIC ON 26/11/2016 **
